@@ -20,13 +20,10 @@ app.use(morgan('dev'));
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
-// Project_10 Middleware to enable CORS
-app.use(cors()); // Allow all origins by default
-
-//If you want to restrict CORS to only your React app’s origin, modify the cors configuration like this:
-// app.use(cors({
-//   origin: 'http://localhost:5173'
-// }));
+// Project_10 Middleware to enable CORS, restrict CORS to only your React app’s origin
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 // #Qn2.5 Initialize Sequelize instance with SQLite pointing to fsjstd-restapi.db with the sqlite dialect.
 const sequelize = new Sequelize({
