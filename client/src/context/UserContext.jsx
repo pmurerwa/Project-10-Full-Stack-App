@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
-import api from '../utils/apiHelper'; 
+import { api } from '../utils/apiHelper'; 
 
 export const UserContext = createContext();
 
