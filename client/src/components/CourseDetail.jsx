@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import axios from "axios";
 import { UserContext } from "../context/UserContext";
+import { api } from "../utils/apiHelper";
 
 //CourseDetail displays information about a specific course
 const CourseDetail = () => {
@@ -18,28 +18,27 @@ const CourseDetail = () => {
   // Fetch course details when the component mounts or when the course ID changes
   useEffect(() => {
     const fetchCourseData = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/courses/${id}`
-        );
-        const courseData = response.data;
-        console.log(courseData); // For debugging, loads the response
-        setCourse(courseData); // Sets course data and loading state
-      } catch {
-        setError("Course not found"); //Logs Error message when the course is not found
+        const response = await api(`/courses/${id}`, "GET");
+        if (res.status === 400) {
+          navigate("/notfound");
+        }
+        const data = await response.json();
+        setCourse(data);
+        if (data.userId !== authUser.id) {
+          navigate("/forbidden");
+        }
+      } catch (error) {
+        setError('Failed to fetch data. Please check your connection and try again.');
+        navigate("/error");
       } finally {
-        setLoading(false); //Removes loading after fetching data
+        setLoading(false);
       }
     };
 
-    if (id) {
-      fetchCourseData(); // Fetch course data only if the ID is valid
-    } else {
-      setLoading(false); // If there's no ID, stop loading
-      setError("Invalid course ID"); // Set error message for invalid course ID
-    }
-  }, [id, authUser, navigate]); // Include authUser and navigate in the dependency array
-
+    fetchCourseData();
+  }, [id, navigate, authUser]);
 
   // Handle course deletion
   const handleDeleteCourse = async () => {
@@ -47,14 +46,20 @@ const CourseDetail = () => {
     if (window.confirm("Delete this course? (Action cannot be undone)")) {
       try {
         // Send DELETE request to the API to remove the course
-        await axios.delete(`http://localhost:5000/api/courses/${id}`, {
-          headers: {
-            Authorization: `Basic ${authUser.authToken}`, // Include authorization token for authentication
-          },
+        const response = await api(`/courses/${id}`, 'DELETE', null, {
+          emailAddress: authUser.email,
+          password: authUser.password
         });
-        navigate("/"); // Navigate back to the course list after deletion
-      } catch {
-        setError("Failed to delete course"); // Set error message if deletion fails
+
+        if (response.ok) {
+          navigate('/'); // Navigate back to the course list after deletion
+        } else {
+          // If the delete request failed but didn't throw, handle based on HTTP response
+          const error = await response.json();
+          setError(error.message || 'Deletion failed');
+        }
+      } catch (error) {
+        setError('Failed to delete the course.');
       }
     }
   };
@@ -63,10 +68,9 @@ const CourseDetail = () => {
   if (loading) return <p>Loading...</p>; // Display loading message while fetching data
   if (error) return <p>{error}</p>; // Display error message if there's an error
 
-
   return (
     <>
-    <main>
+      <main>
         {/* Action buttons for updating and deleting course */}
         <div className="actions--bar">
           <div className="wrap">
@@ -118,7 +122,7 @@ const CourseDetail = () => {
           </div>
         </div>
       </main>
-    </>  
+    </>
   );
 };
 

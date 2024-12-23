@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "../utils/apiHelper";
 
 const Courses = () => {
   // State to hold the list of courses and loading state
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true); // to Indicate New loading state
+  const navigate = useNavigate();
 
   // useEffect hook to fetch the list of courses
   useEffect(() => {
     const fetchCourses = async () => {
+      setLoading(true);
       // Fetch the list of courses from the API
       try {
-        const response = await axios.get("http://localhost:5000/api/courses");
-        //const data = await response.json();
-        console.log("Courses Data: ", response.data); // Log the data
-        setCourses(response.data);
+        const response = await api("/courses", "GET");
+        if (response.status === 500) {
+          navigate("/error");
+          return;
+        }
+        const data = await response.json();
+        setCourses(data);
+
       } catch (error) {
-        //console.error("Error fetching courses:", error);
-        // Log detailed error information to diagnose issues
-        console.error("Error fetching courses:", error.response ? error.response.data : error.message);
+        console.error("Error fetching courses:", error);
       } finally {
-        setLoading(false); // Set loading to false after the course is fetched
+        setLoading(false); 
       }
     };
 
     fetchCourses();
-  }, []);
+  }, [navigate]);
 
   // Render loading indicator or courses
   if (loading) {
