@@ -16,7 +16,7 @@ const UserProvider = ({ children }) => {
       setAuthUser(user);
       Cookies.set(
         "authenticatedUser",
-        JSON.stringify({ ...user }), 
+        JSON.stringify({ ...user, password: credentials.password }), 
         { expires: 1 } // 1 day
       );
       return { ...user, password: credentials.password };
