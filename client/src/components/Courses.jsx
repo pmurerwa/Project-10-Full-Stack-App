@@ -1,32 +1,31 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../utils/apiHelper";
 
 const Courses = () => {
   // State to hold the list of courses and loading state
   const [courses, setCourses] = useState([]);
-  const [loading, setLoading] = useState(true); // to Indicate New loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // useEffect hook to fetch the list of courses
   useEffect(() => {
     const fetchCourses = async () => {
-      setLoading(true);
-      // Fetch the list of courses from the API
       try {
         const response = await api("/courses", "GET");
         if (response.status === 500) {
           navigate("/error");
-          return;
         }
         const data = await response.json();
         setCourses(data);
 
       } catch (error) {
-        console.error("Error fetching courses:", error);
-      } finally {
-        setLoading(false); 
-      }
+        console.error(`Error fetching courses:, ${error}`);
+        navigate("/error");
+      } 
+      finally {
+      setLoading(false);
+    }
     };
 
     fetchCourses();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { UserContext } from "../context/UserContext";
@@ -10,10 +10,9 @@ const CourseDetail = () => {
   const { id } = useParams(); // Retrieve course ID from the URL
   const navigate = useNavigate(); // Hook to redirect between routes
 
-  // State variables for course data, loading status, and error handling
-  const [course, setCourse] = useState(null); // State to hold course data
+  const [course, setCourse] = useState({ title: '', user: {}, description: '', materialsNeeded: '', estimatedTime: '' }); // State to hold course data
   const [loading, setLoading] = useState(true); // State to manage loading status
-  const [error, setError] = useState(null); // State to hold error messages
+  const [error, setError] = useState(''); // State to hold error messages
 
   // Fetch course details when the component mounts or when the course ID changes
   useEffect(() => {
@@ -21,17 +20,19 @@ const CourseDetail = () => {
       setLoading(true);
       try {
         const response = await api(`/courses/${id}`, "GET");
-        if (res.status === 400) {
+        if (response.status === 404) {
           navigate("/notfound");
-        }
-        const data = await response.json();
-        setCourse(data);
-        if (data.userId !== authUser.id) {
+        } else if (response.status === 403) {
           navigate("/forbidden");
+
+        } else {
+          const data = await response.json();
+          setCourse(data);
+          console.log("Fetched course data: ", data); // Add a log to check fetched data
+
         }
       } catch (error) {
-        setError('Failed to fetch data. Please check your connection and try again.');
-        navigate("/error");
+        setError( "Failed to fetch data. Please check your connection and try again.");
       } finally {
         setLoading(false);
       }
@@ -42,19 +43,17 @@ const CourseDetail = () => {
 
   // Handle course deletion
   const handleDeleteCourse = async () => {
-    // Confirm deletion from the user
     if (window.confirm("Delete this course? (Action cannot be undone)")) {
       try {
         // Send DELETE request to the API to remove the course
-        const response = await api(`/courses/${id}`, 'DELETE', null, {
+        const response = await api(`/courses/${id}`, "DELETE", null, {
           emailAddress: authUser.email,
-          password: authUser.password
+          password: authUser.password,
         });
 
         if (response.ok) {
-          navigate('/'); // Navigate back to the course list after deletion
+          navigate('/');
         } else {
-          // If the delete request failed but didn't throw, handle based on HTTP response
           const error = await response.json();
           setError(error.message || 'Deletion failed');
         }
@@ -74,22 +73,15 @@ const CourseDetail = () => {
         {/* Action buttons for updating and deleting course */}
         <div className="actions--bar">
           <div className="wrap">
-            {authUser &&
-              authUser.id === course.user.id && ( // Check if the authenticated user is the course owner
+            {authUser && authUser.id === course.user.id && ( // Check if the authenticated user is the course owner
                 <>
-                  <Link className="button" to={`/courses/${id}/update`}>
-                    Update Course{" "}
-                    {/* Button to navigate to update course page */}
-                  </Link>
-                  <button className="button" onClick={handleDeleteCourse}>
-                    Delete Course {/* Button to delete the course */}
-                  </button>
+                  <Link className="button" to={`/courses/${id}/update`}>Update Course</Link> {/* Button to navigate to update course page */}
+                  <button className="button" onClick={handleDeleteCourse}>Delete Course</button> {/* Button to delete the course */}
                 </>
               )}
-            <Link className="button button-secondary" to="/">
-              Return to List {/* Button to return to the course list */}
-            </Link>
+            <Link className="button button-secondary" to="/">Return to List</Link> {/* Button to return to the course list */}
           </div>
+        
         </div>
 
         {/* Course detail section */}
@@ -98,26 +90,16 @@ const CourseDetail = () => {
           <div className="main--flex">
             <div>
               <h3 className="course--detail--title">Course</h3>
-              <h4 className="course--name">{course.title}</h4>{" "}
-              {/* Display course title */}
-              <p>
-                By{" "}
-                {course.user
-                  ? `${course.user.firstName} ${course.user.lastName}` // Display course author name
-                  : "Unknown"}
-              </p>
-              <ReactMarkdown>{course.description}</ReactMarkdown>{" "}
-              {/* Render course description using ReactMarkdown */}
+              <h4 className="course--name">{course.title}</h4>
+              <p>By {course.user ? `${course.user.firstName} ${course.user.lastName}` : "Unknown"}</p> {/* Display course author name*/}
+              <ReactMarkdown>{course.description}</ReactMarkdown> {/* Render course description using ReactMarkdown */}
             </div>
+
             <div>
               <h3 className="course--detail--title">Estimated Time</h3>
-              <p>{course.estimatedTime}</p>{" "}
-              {/* Display estimated time for the course */}
+              <p>{course.estimatedTime}</p> {/* Display estimated time for the course */}
               <h3 className="course--detail--title">Materials Needed</h3>
-              <ul className="course--detail--list">
-                <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown>{" "}
-                {/* Render materials needed using ReactMarkdown */}
-              </ul>
+              <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown> {/* Render materials needed using ReactMarkdown */}
             </div>
           </div>
         </div>

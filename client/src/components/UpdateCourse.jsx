@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { api } from "../utils/apiHelper";
-import UserContext from "../context/UserContext"; // Ensure this imports the context, not just the provider
+import { UserContext } from "../context/UserContext"; // Ensure this imports the context, not just the provider
 import ErrorsDisplay from "./ErrorsDisplay";
 
 const UpdateCourse = () => {

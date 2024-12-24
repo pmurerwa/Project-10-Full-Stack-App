@@ -6,6 +6,7 @@ import { api } from '../utils/apiHelper';
 const CreateCourse = () => {
     const { authUser } = useContext(UserContext);
     const navigate = useNavigate();
+
     const titleRef = useRef();
     const descriptionRef = useRef();
     const estimatedTimeRef = useRef();
@@ -29,18 +30,16 @@ const CreateCourse = () => {
             estimatedTime: estimatedTimeRef.current.value,
             materialsNeeded: materialsNeededRef.current.value
         };
-
         try {
-            const response = await api("/courses", "POST", courseData);
-            const status = response.status;
-            if (status === 201) {
-                const newCourse = await response.json();
+            const response = await api("/courses", "POST", courseData, authUser);
+            if (response.status === 201) {
                 console.log(`Course has been created.`);
-                navigate(`/courses/${newCourse.id}`);
-            } else if (status === 400) {
+                navigate(`/`);
+
+            } else if (response.status === 400) {
                 const error = await response.json();
                 setErrors(error.errors || ["Validation errors occurred."]);
-            } else if (status === 500) {
+            } else if (response.status === 500) {
                 throw new Error("Server error occurred");
             } else {
                 throw new Error("Unhandled status code");
@@ -57,28 +56,44 @@ const CreateCourse = () => {
     };
 
     return (
-        <div>
-            <h1>Create Course</h1>
+        <div className="wrap">
+            <h2>Create Course</h2>
+            <ErrorsDisplay errors={errors} />
             <form onSubmit={handleSubmit}>
-                <label htmlFor="title">Course Title</label>
-                <input id="title" ref={titleRef} type="text" />
-                <label htmlFor="description">Course Description</label>
-                <textarea id="description" ref={descriptionRef} />
-                <label htmlFor="estimatedTime">Estimated Time</label>
-                <input id="estimatedTime" ref={estimatedTimeRef} type="text" />
-                <label htmlFor="materialsNeeded">Materials Needed</label>
-                <textarea id="materialsNeeded" ref={materialsNeededRef} />
-                <button type="submit">Create Course</button>
-                <button onClick={handleCancel}>Cancel</button>
-            </form>
-            {errors.length > 0 && (
-                <div>
-                    <h2>Errors:</h2>
-                    <ul>
-                        {errors.map((error, index) => <li key={index}>{error}</li>)}
-                    </ul>
+                <div className="main--flex">
+                    <div>
+                        <label htmlFor="courseTitle">Course Title</label>
+                        <input 
+                        id="courseTitle" 
+                        name="courseTitle" 
+                        type="text" 
+                        ref={courseTitle}
+                        />
+
+                            {/* <p>By {authUser.firstName} {authUser.lastName}</p> */}
+
+                            <label htmlFor="courseDescription">Course Description</label>
+                            <textarea 
+                            id="courseDescription" 
+                            name="courseDescription"
+                            ref={courseDescription}
+                            >
+
+                            </textarea>
+                    </div>
+                    <div>
+                        <label htmlFor="estimatedTime">Estimated Time</label>
+                        <input id="estimatedTime" name="estimatedTime" 
+                        type="text" 
+                        ref={estimatedTime} />
+
+                            <label htmlFor="materialsNeeded">Materials Needed</label>
+                            <textarea id="materialsNeeded" name="materialsNeeded"
+                            ref={materialsNeeded}></textarea>
+                    </div>
                 </div>
-            )}
+                <button className="button" type="submit">Create Course</button><button className="button button-secondary" onClick={handleCancel}>Cancel</button>
+            </form>
         </div>
     );
 };
