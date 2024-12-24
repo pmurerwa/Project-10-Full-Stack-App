@@ -1,3 +1,4 @@
+// UserContext.js
 import React, { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import { api } from '../utils/apiHelper'; 
