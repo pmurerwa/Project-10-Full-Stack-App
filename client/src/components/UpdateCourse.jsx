@@ -25,7 +25,7 @@ const UpdateCourse = () => {
                 const response = await api(`/courses/${id}`, 'GET');
                 if (response.status === 200) {
                     const data = await response.json();
-                    if (data.user.id !== authUser.id) {
+                    if (data.userId !== authUser.id) {
                         navigate("/forbidden");
                         return;
                     }

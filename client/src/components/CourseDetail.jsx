@@ -56,7 +56,7 @@ const CourseDetail = () => {
       try {
         // Send DELETE request to the API to remove the course
         const response = await api(`/courses/${id}`, "DELETE", null, {
-          emailAddress: authUser.email,
+          emailAddress: authUser.emailAdress,
           password: authUser.password,
         });
 
