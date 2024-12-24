@@ -13,7 +13,11 @@ const CourseDetail = () => {
 
   const [course, setCourse] = useState({
     title: '',
-    user: {}, // Ensure the user field is an object
+    user: {
+      id: null,
+      firstName: '',
+      lastName: ''
+    },
     description: '',
     materialsNeeded: '',
     estimatedTime: '',
@@ -78,7 +82,7 @@ const CourseDetail = () => {
         {/* Action buttons for updating and deleting course */}
         <div className="actions--bar">
           <div className="wrap">
-            {authUser && authUser.id === course.user.id && ( // Ensure the user field is correctly accessed
+            {authUser && course.user && authUser.id === course.user.id && ( // Ensure the user field is correctly accessed
               <>
                 <Link className="button" to={`/courses/${id}/update`}>Update Course</Link> {/* Button to navigate to update course page */}
                 <button className="button" onClick={handleDeleteCourse}>Delete Course</button> {/* Button to delete the course */}
