@@ -28,7 +28,7 @@ const UserSignIn = () => {
       if (user) {
         navigate(from);
       } else {
-        setErrors(["Sign-in was unsuccessful"]);
+        setErrors(["Sign-in was unsuccessful, verify your email/password"]);
       }
     } catch (error) {
       console.log(error);

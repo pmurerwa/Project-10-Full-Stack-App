@@ -1,4 +1,4 @@
-// CourseDetail.jsx
+//CourseDetail.jsx
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -13,7 +13,7 @@ const CourseDetail = () => {
 
   const [course, setCourse] = useState({
     title: '',
-    user: {},
+    user: {}, // Ensure the user field is an object
     description: '',
     materialsNeeded: '',
     estimatedTime: '',
@@ -34,6 +34,7 @@ const CourseDetail = () => {
         } else {
           const data = await response.json();
           setCourse(data);
+          console.log("Fetched course data: ", data); // Add a log to check fetched data
         }
       } catch (error) {
         setError("Failed to fetch data. Please check your connection and try again.");
@@ -77,7 +78,7 @@ const CourseDetail = () => {
         {/* Action buttons for updating and deleting course */}
         <div className="actions--bar">
           <div className="wrap">
-            {authUser && authUser.id === course.user.id && ( // Check if the authenticated user is the course owner
+            {authUser && authUser.id === course.user.id && ( // Ensure the user field is correctly accessed
               <>
                 <Link className="button" to={`/courses/${id}/update`}>Update Course</Link> {/* Button to navigate to update course page */}
                 <button className="button" onClick={handleDeleteCourse}>Delete Course</button> {/* Button to delete the course */}

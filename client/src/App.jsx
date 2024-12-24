@@ -33,7 +33,7 @@ const App = () => {
         {/* Private Routes */}
         <Route element={<PrivateRoute />}>
           <Route path="/courses/create" element={<CreateCourse />} />
-          <Route path="/courses/:id/update" element={<UpdateCourse />} />
+          <Route path="/courses/:id/update" element={<UpdateCourse />} /> 
         </Route>
         {/* Catch-all route for unmatched routes */}
         <Route path="*" element={<NotFound />} />

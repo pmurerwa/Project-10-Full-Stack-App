@@ -10,8 +10,7 @@ const UserProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(cookie ? JSON.parse(cookie) : null);
 
   const signIn = async (credentials) => {
-    
-    const response = await api("/users", "GET", null, credentials);
+    const response = await api("/users", "GET", null, credentials); 
     if (response.status === 200) {
       const user = await response.json();
       setAuthUser(user);
