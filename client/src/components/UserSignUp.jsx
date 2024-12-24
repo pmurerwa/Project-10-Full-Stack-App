@@ -1,4 +1,5 @@
-import React, { useContext, useRef, useState } from "react";
+//UserSignUp.jsx
+import { useContext, useRef, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../utils/apiHelper";
@@ -66,7 +67,7 @@ const UserSignUp = () => {
     <div className="form--centered">
       <h2>Sign Up</h2>
       <ErrorsDisplay errors={errors} />
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="firstName">First Name</label>
         <input id="firstName" name="firstName" type="text" ref={firstNameRef} />
         <label htmlFor="lastName">Last Name</label>
@@ -75,9 +76,7 @@ const UserSignUp = () => {
         <input id="emailAddress" name="emailAddress" type="email" ref={emailRef} />
         <label htmlFor="password">Password</label>
         <input id="password" name="password" type="password" ref={passwordRef} />
-        <button className="button" onClick={handleSubmit}>
-          Sign Up
-        </button>
+        <button className="button" type="submit">Sign Up</button>
         <button className="button button-secondary" onClick={handleCancel}>
           Cancel
         </button>

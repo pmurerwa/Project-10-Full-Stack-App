@@ -26,7 +26,7 @@ const App = () => {
         <Route path="/courses/:id" element={<CourseDetail />} />
         <Route path="/error" element={<UnhandledError />} />
         <Route path="/forbidden" element={<Forbidden />} />
-        <Route path="/not-found" element={<NotFound />} />
+        <Route path="/notfound" element={<NotFound />} />
         <Route path="/signin" element={<UserSignIn />} />
         <Route path="/signout" element={<UserSignOut />} />
         <Route path="/signup" element={<UserSignUp />} />

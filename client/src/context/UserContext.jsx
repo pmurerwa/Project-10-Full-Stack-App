@@ -1,5 +1,5 @@
 // UserContext.js
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 import Cookies from 'js-cookie';
 import { api } from '../utils/apiHelper'; 
 
@@ -16,7 +16,7 @@ const UserProvider = ({ children }) => {
       setAuthUser(user);
       Cookies.set(
         "authenticatedUser",
-        JSON.stringify({ ...user, password: credentials.password }), 
+        JSON.stringify({ ...user }), 
         { expires: 1 } // 1 day
       );
       return { ...user, password: credentials.password };

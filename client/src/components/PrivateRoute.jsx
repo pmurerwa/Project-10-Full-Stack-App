@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+//PrivateRoute.jsx
+import { useContext } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { UserContext } from "../context/UserContext"; // Correct path according to your folder structure
 
