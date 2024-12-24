@@ -82,7 +82,7 @@ const CourseDetail = () => {
         {/* Action buttons for updating and deleting course */}
         <div className="actions--bar">
           <div className="wrap">
-            {authUser && course.User && authUser.id === course.User.id && ( // Ensure the user field is correctly accessed
+            {authUser && course.User && authUser.id === course.userId && ( // Ensure the user field is correctly accessed
               <>
                 <Link className="button" to={`/courses/${id}/update`}>Update Course</Link> {/* Button to navigate to update course page */}
                 <button className="button" onClick={handleDeleteCourse}>Delete Course</button> {/* Button to delete the course */}
