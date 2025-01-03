@@ -55,11 +55,7 @@ const CourseDetail = () => {
     if (window.confirm("Delete this course? (Action cannot be undone)")) {
       try {
         // Send DELETE request to the API to remove the course
-        const response = await api(`/courses/${id}`, "DELETE", null, {
-          emailAddress: authUser.emailAdress,
-          password: authUser.password,
-        });
-
+        const response = await api(`/courses/${id}`, "DELETE", null, authUser);
         if (response.ok) {
           navigate('/');
         } else {

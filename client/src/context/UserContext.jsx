@@ -13,15 +13,15 @@ const UserProvider = ({ children }) => {
     const response = await api("/users", "GET", null, credentials); 
     if (response.status === 200) {
       const user = await response.json();
+      user.password = credentials.password;
       setAuthUser(user);
       Cookies.set(
         "authenticatedUser",
-        JSON.stringify({ ...user, password: credentials.password }), 
+        JSON.stringify(user), 
         { expires: 1 } // 1 day
       );
-      return { ...user, password: credentials.password };
+      return user;
     } else if (response.status === 401) {
-      Cookies.remove("authenticatedUser");
       return null;
     } else {
       throw new Error(await response.text());
@@ -32,6 +32,7 @@ const UserProvider = ({ children }) => {
     setAuthUser(null);
     Cookies.remove("authenticatedUser");
   };
+
 
   return (
     <UserContext.Provider value={{

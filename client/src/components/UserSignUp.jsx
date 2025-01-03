@@ -31,12 +31,12 @@ const UserSignUp = () => {
       if (response.status === 201) {
         console.log(`Successfully signed up and authenticated`);
 
-        const credentials = {
-          emailAddress: newUser.emailAddress,
-          password: newUser.password,
-        };
+        // const credentials = {
+        //   emailAddress: newUser.emailAddress,
+        //   password: newUser.password,
+        // };
 
-        const signInResponse = await actions.signIn(credentials);
+        const signInResponse = await actions.signIn(newUser);
         if (signInResponse) {
           navigate("/");
         } else {
@@ -53,7 +53,6 @@ const UserSignUp = () => {
         throw new Error("Failed Sign-In");
       }
     } catch (error) {
-      console.log(error);
       navigate("/error");
     }
   };

@@ -30,7 +30,6 @@ const UserSignIn = () => {
         setErrors(["Sign-in was unsuccessful, verify your email/password"]);
       }
     } catch (error) {
-      console.log(error);
       navigate("/error");
     }
   };
