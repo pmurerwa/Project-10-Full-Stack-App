@@ -7,18 +7,24 @@ const Nav = () => {
   return (
     <nav>
       {authUser === null ? (
-        <>
-          <Link className="signup" to="/signup">Sign up</Link>
-          <Link className="signin" to="/signin">{" "}Sign in</Link>
-        </>
+        <ul className="header--signedout">
+          <li>
+            <Link to="signup">Sign Up</Link>
+          </li>
+          <li>
+            <Link to="signin">Sign In</Link>
+          </li>
+        </ul>
       ) : (
         <>
-          <span>
-            Welcome, {authUser.firstName} {authUser.lastName}!
-          </span>
-          <Link className="signout" to="/signout">
-            Sign out
-          </Link>
+          <ul className="header--signedin">
+            <li>
+              Welcome, {authUser.firstName} {authUser.lastName}!
+            </li>
+            <li>
+              <Link to="/signout">Sign Out</Link>
+            </li>
+          </ul>
         </>
       )}
     </nav>

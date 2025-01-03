@@ -12,18 +12,18 @@ const CourseDetail = () => {
   const navigate = useNavigate(); // Hook to redirect between routes
 
   const [course, setCourse] = useState({
-    title: '',
+    title: "",
     user: {
       id: null,
-      firstName: '',
-      lastName: ''
+      firstName: "",
+      lastName: "",
     },
-    description: '',
-    materialsNeeded: '',
-    estimatedTime: '',
+    description: "",
+    materialsNeeded: "",
+    estimatedTime: "",
   }); // State to hold course data
   const [loading, setLoading] = useState(true); // State to manage loading status
-  const [error, setError] = useState(''); // State to hold error messages
+  const [error, setError] = useState(""); // State to hold error messages
 
   // Fetch course details when the component mounts or when the course ID changes
   useEffect(() => {
@@ -41,7 +41,9 @@ const CourseDetail = () => {
           console.log("Fetched course data: ", data); // Add a log to check fetched data
         }
       } catch (error) {
-        setError("Failed to fetch data. Please check your connection and try again.");
+        setError(
+          "Failed to fetch data. Please check your connection and try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -57,13 +59,13 @@ const CourseDetail = () => {
         // Send DELETE request to the API to remove the course
         const response = await api(`/courses/${id}`, "DELETE", null, authUser);
         if (response.ok) {
-          navigate('/');
+          navigate("/");
         } else {
           const errorData = await response.json();
-          setError(errorData.message || 'Deletion failed');
+          setError(errorData.message || "Deletion failed");
         }
       } catch (error) {
-        setError('Failed to delete the course.');
+        setError("Failed to delete the course.");
       }
     }
   };
@@ -78,13 +80,24 @@ const CourseDetail = () => {
         {/* Action buttons for updating and deleting course */}
         <div className="actions--bar">
           <div className="wrap">
-            {authUser && course.User && authUser.id === course.userId && ( // Ensure the user field is correctly accessed
-              <>
-                <Link className="button" to={`/courses/${id}/update`}>Update Course</Link> {/* Button to navigate to update course page */}
-                <button className="button" onClick={handleDeleteCourse}>Delete Course</button> {/* Button to delete the course */}
-              </>
-            )}
-            <Link className="button button-secondary" to="/">Return to List</Link> {/* Button to return to the course list */}
+            {authUser &&
+              course.User &&
+              authUser.id === course.userId && ( // Ensure the user field is correctly accessed
+                <>
+                  <Link className="button" to={`/courses/${id}/update`}>
+                    Update Course
+                  </Link>{" "}
+                  {/* Button to navigate to update course page */}
+                  <button className="button" onClick={handleDeleteCourse}>
+                    Delete Course
+                  </button>{" "}
+                  {/* Button to delete the course */}
+                </>
+              )}
+            <Link className="button button-secondary" to="/">
+              Return to List
+            </Link>{" "}
+            {/* Button to return to the course list */}
           </div>
         </div>
 
@@ -95,15 +108,26 @@ const CourseDetail = () => {
             <div>
               <h3 className="course--detail--title">Course</h3>
               <h4 className="course--name">{course.title}</h4>
-              <p>By {course.user ? `${course.user.firstName} ${course.user.lastName}` : "Unknown"}</p> {/* Display course author name */}
-              <ReactMarkdown>{course.description}</ReactMarkdown> {/* Render course description using ReactMarkdown */}
+              <p>
+                By{" "}
+                {course.user
+                  ? `${course.user.firstName} ${course.user.lastName}`
+                  : "Unknown"}
+              </p>{" "}
+              {/* Display course author name */}
+              <ReactMarkdown>{course.description}</ReactMarkdown>{" "}
+              {/* Render course description using ReactMarkdown */}
             </div>
 
             <div>
               <h3 className="course--detail--title">Estimated Time</h3>
-              <p>{course.estimatedTime}</p> {/* Display estimated time for the course */}
+              <p>{course.estimatedTime}</p>{" "}
+              {/* Display estimated time for the course */}
               <h3 className="course--detail--title">Materials Needed</h3>
-              <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown> {/* Render materials needed using ReactMarkdown */}
+              <ul className="course--detail--list">
+                <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown>{" "}
+                {/* Render materials needed using ReactMarkdown */}
+              </ul>
             </div>
           </div>
         </div>

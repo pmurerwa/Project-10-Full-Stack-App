@@ -46,6 +46,7 @@ const UserSignUp = () => {
         }
       } else if (response.status === 400) {
         const data = await response.json();
+        console.log('ade data', data)
         setErrors(data.errors);
       } else if (response.status === 500) {
         navigate("/error");

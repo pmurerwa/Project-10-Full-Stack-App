@@ -7,7 +7,7 @@
       "password": "joepassword"
     },
     {
-      "firstName": "Sally",
+      "firstName": "",
       "lastName": "Jones",
       "emailAddress": "sally@jones.com",
       "password": "sallypassword"
