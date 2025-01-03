@@ -1,9 +1,13 @@
+// React component to display the header of the application
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
+// Navigation component to display different nav items based on user's authentication status
 const Nav = () => {
   const { authUser } = useContext(UserContext);
+
+  // Render different navigation options based on whether the user is signed in or not
   return (
     <nav>
       {authUser === null ? (
@@ -31,6 +35,7 @@ const Nav = () => {
   );
 };
 
+// Header component that wraps the navigation and logo
 const Header = () => {
   return (
     <header>

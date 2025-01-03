@@ -4,6 +4,7 @@ import { UserContext } from "../context/UserContext";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import ErrorsDisplay from "./ErrorsDisplay";
 
+// Component for user sign-in functionality
 const UserSignIn = () => {
   const emailAddress = useRef(null);
   const password = useRef(null);
@@ -16,21 +17,22 @@ const UserSignIn = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const from = location.state?.from || "/";
+    const from = location.state?.from || "/"; // Determines the path to navigate after sign-in
     const credentials = {
-      emailAddress: emailAddress.current.value,
-      password: password.current.value
+      emailAddress: emailAddress.current.value, // Access the email input's value
+      password: password.current.value  // Access the password input's value
     };
 
+    // Attempt to sign in with provided credentials
     try {
       const user = await actions.signIn(credentials);
       if (user) {
-        navigate(from);
+        navigate(from); // Navigate to the previous page or home '/'
       } else {
         setErrors(["Sign-in was unsuccessful, verify your email/password"]);
       }
-    } catch (error) {
-      navigate("/error");
+    } catch {
+      navigate("/error"); // Navigate to error page on exceptions
     }
   };
 
@@ -59,7 +61,7 @@ const UserSignIn = () => {
         <button className="button" type="submit">Sign In</button>
         <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
       </form>
-      <p>Don't have a user account? Click here to <Link to="/signup">sign up</Link>!</p>
+      <p>Do not have a user account? Click here to <Link to="/signup">sign up</Link>!</p>
     </div>
   );
 };

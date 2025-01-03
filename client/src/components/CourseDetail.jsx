@@ -9,8 +9,9 @@ import { api } from "../utils/apiHelper";
 const CourseDetail = () => {
   const { authUser } = useContext(UserContext); // Retrieves the authenticated user from UserContext
   const { id } = useParams(); // Retrieve course ID from the URL
-  const navigate = useNavigate(); // Hook to redirect between routes
+  const navigate = useNavigate(); // Navigation hook for route redirection
 
+    // Initializing state for course details and control flags
   const [course, setCourse] = useState({
     title: "",
     user: {
@@ -21,11 +22,12 @@ const CourseDetail = () => {
     description: "",
     materialsNeeded: "",
     estimatedTime: "",
-  }); // State to hold course data
+  }); 
+  
   const [loading, setLoading] = useState(true); // State to manage loading status
   const [error, setError] = useState(""); // State to hold error messages
 
-  // Fetch course details when the component mounts or when the course ID changes
+  // Fetch course details upon component mount or when course ID changes
   useEffect(() => {
     const fetchCourseData = async () => {
       setLoading(true);
@@ -40,10 +42,8 @@ const CourseDetail = () => {
           setCourse(data);
           console.log("Fetched course data: ", data); // Add a log to check fetched data
         }
-      } catch (error) {
-        setError(
-          "Failed to fetch data. Please check your connection and try again."
-        );
+      } catch {
+        navigate("/error");
       } finally {
         setLoading(false);
       }
@@ -52,7 +52,7 @@ const CourseDetail = () => {
     fetchCourseData();
   }, [id, navigate]);
 
-  // Handle course deletion
+  // Deletion of a course with confirmation
   const handleDeleteCourse = async () => {
     if (window.confirm("Delete this course? (Action cannot be undone)")) {
       try {
@@ -64,8 +64,8 @@ const CourseDetail = () => {
           const errorData = await response.json();
           setError(errorData.message || "Deletion failed");
         }
-      } catch (error) {
-        setError("Failed to delete the course.");
+      } catch {
+        navigate("/error");
       }
     }
   };
@@ -110,8 +110,8 @@ const CourseDetail = () => {
               <h4 className="course--name">{course.title}</h4>
               <p>
                 By{" "}
-                {course.user
-                  ? `${course.user.firstName} ${course.user.lastName}`
+                {course.User
+                  ? `${course.User.firstName} ${course.User.lastName}`
                   : "Unknown"}
               </p>{" "}
               {/* Display course author name */}

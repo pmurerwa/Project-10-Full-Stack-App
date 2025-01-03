@@ -5,6 +5,7 @@ import { api } from "../utils/apiHelper";
 import { UserContext } from "../context/UserContext"; // Ensure this imports the context, not just the provider
 import ErrorsDisplay from "./ErrorsDisplay";
 
+// Component for updating course details
 const UpdateCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,9 +24,11 @@ const UpdateCourse = () => {
 
         if (response.status === 200) {
           const data = await response.json();
+          // Check if authUser is the owner of the course
           if (authUser.id != data.userId) {
             navigate("/forbidden");
           } else {
+            // Set course details to state
             setTitle(data.title);
             setDescription(data.description);
             setMaterialsNeeded(data.materialsNeeded);
@@ -36,7 +39,7 @@ const UpdateCourse = () => {
         } else {
           navigate("/error");
         }
-      } catch (error) {
+      } catch {
         navigate("/error");
       }
     };
@@ -53,11 +56,13 @@ const UpdateCourse = () => {
         materialsNeeded
     };
 
+    // Auth check before making API request
     if (!authUser) {
       setErrors(["Authentication required. Please sign in and try again."]);
       return;
     }
 
+    // Try updating the course with the provided details
     try {
       const response = await api(`/courses/${id}`, "PUT", currentCourse, authUser);
 
@@ -75,7 +80,7 @@ const UpdateCourse = () => {
       } else {
         throw new Error("Unexpected HTTP status");
       }
-    } catch (error) {
+    } catch {
       navigate("/error");
     }
   };

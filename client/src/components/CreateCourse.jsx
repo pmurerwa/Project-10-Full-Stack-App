@@ -6,15 +6,17 @@ import { api } from '../utils/apiHelper';
 import ErrorsDisplay from './ErrorsDisplay'; // Assuming ErrorsDisplay is another component to display error messages
 
 const CreateCourse = () => {
-    const { authUser } = useContext(UserContext);
-    const navigate = useNavigate();
+    const { authUser } = useContext(UserContext);// Destructure authUser from the UserContext
+    const navigate = useNavigate();// Get the navigate function from useNavigate for programmatic navigation
 
+    // Create references for the form fields
     const titleRef = useRef();
     const descriptionRef = useRef();
     const estimatedTimeRef = useRef();
     const materialsNeededRef = useRef();
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState([]); // State to hold any validation or error messages
 
+    // Redirect to sign-in page if user is not authenticated
     useEffect(() => {
         if (!authUser) {
             setErrors(['Please sign in to create a course']);
@@ -22,10 +24,11 @@ const CreateCourse = () => {
         }
     }, [authUser, navigate]);
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const courseData = {
+        const courseData = { // Gather course data from form inputs
             userId: authUser.id,
             title: titleRef.current.value,
             description: descriptionRef.current.value,
@@ -33,7 +36,8 @@ const CreateCourse = () => {
             materialsNeeded: materialsNeededRef.current.value
         };
 
-        try {
+         // Make API call to create course
+         try {
             const response = await api("/courses", "POST", courseData, authUser);
             if (response.status === 201) {
                 console.log('Course has been created.');
@@ -52,12 +56,13 @@ const CreateCourse = () => {
         }
     };
 
-    const handleCancel = (e) => {
+     // Handle cancel button action
+     const handleCancel = (e) => {
         e.preventDefault();
         navigate('/');
     };
 
-    return (
+    return ( // Render the form for creating a course
         <div className="wrap">
             <h2>Create Course</h2>
             <ErrorsDisplay errors={errors} />
